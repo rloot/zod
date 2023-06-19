@@ -1083,6 +1083,9 @@ export interface ZodNumberDef extends ZodTypeDef {
 }
 
 export class ZodNumber extends ZodType<number, ZodNumberDef> {
+  hi() {
+    console.log("hiiiii");
+  }
   _parse(input: ParseInput): ParseReturnType<number> {
     if (this._def.coerce) {
       input.data = Number(input.data);
@@ -1346,6 +1349,31 @@ export class ZodNumber extends ZodType<number, ZodNumberDef> {
       }
     }
     return Number.isFinite(min) && Number.isFinite(max);
+  }
+}
+
+/////////////////////////////////////////
+/////////////////////////////////////////
+//////////                     //////////
+//////////      ZodField      //////////
+//////////                     //////////
+/////////////////////////////////////////
+/////////////////////////////////////////
+
+export class ZodField extends ZodNumber {
+  static create = (
+    params?: RawCreateParams & { coerce?: boolean }
+  ): ZodNumber => {
+    return new ZodField({
+      checks: [],
+      typeName: ZodFirstPartyTypeKind.ZodNumber,
+      coerce: params?.coerce || false,
+      ...processCreateParams(params),
+    });
+  };
+
+  public hi() {
+    return "I work : )";
   }
 }
 
@@ -4926,6 +4954,7 @@ const optionalType = ZodOptional.create;
 const nullableType = ZodNullable.create;
 const preprocessType = ZodEffects.createWithPreprocess;
 const pipelineType = ZodPipeline.create;
+const zodFieldType = ZodField.create;
 const ostring = () => stringType().optional();
 const onumber = () => numberType().optional();
 const oboolean = () => booleanType().optional();
@@ -4955,6 +4984,7 @@ export {
   discriminatedUnionType as discriminatedUnion,
   effectsType as effect,
   enumType as enum,
+  zodFieldType as Field,
   functionType as function,
   instanceOfType as instanceof,
   intersectionType as intersection,
